@@ -1,1 +1,39 @@
-# Write Kubernetes Deployment Script
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-catalog-simar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-catalog-simar
+  template:
+    metadata:
+      labels:
+        app: book-catalog-simar
+    spec:
+      containers:
+      - name: book-catalog-simar
+        image: book-catalog-simar:1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8081
+        env:
+        - name: PORT
+          value: "8081"
+        - name: DATABASE_URL
+          value: "postgresql://simardeepsingh_sit722_part2_user:B8VTPt3gyFfacQ39GMPl0ELDRFM9Nkq7@dpg-crhbl3o8fa8c738vdlag-a.oregon-postgres.render.com/simardeepsingh_sit722_part2"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-catalog-simar
+spec:
+  selector:
+    app: book-catalog-simar
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+      nodePort: 30001
